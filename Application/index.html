@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Recipe Genie</title>
+    <style>
+        .banner {
+            height: 300px;
+            /* Height of the banner image */
+            background-image: url('/static/banner1.png');
+            /* Path to your image */
+            background-size: cover;
+            /* Cover the entire div */
+            background-position: center;
+            /* Center the image */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .recommendation {
+            background-color: #f8f9fa;
+            /* Light background for recommendations */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            /* Margin between recommendations */
+            text-align: center;
+            /* Center the text */
+        }
+
+        body {
+            background-color: #e9ecef;
+            /* Slightly darker background */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            /* Bigger font size for the app name */
+        }
+
+        .welcome-note {
+            font-size: 1.2em;
+            /* Font size for the welcome note */
+            margin-top: 10px;
+            /* Margin above the welcome note */
+            color: black;
+            /* Change color to black */
+            margin-bottom: 20px;
+            /* Add space below the welcome note */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="banner">
+        <h1>Recipe Genie</h1>
+    </div>
+    <div class="container">
+        <div class="welcome-note text-center">
+            Hello! Explore the world of recipes and discover delicious dishes you can create!
+        </div>
+        <form method="POST">
+            <div class="form-group">
+                <label for="ingredients">Enter Ingredients (comma separated):</label>
+                <input type="text" class="form-control" name="ingredients" id="ingredients" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Recommendations</button>
+            <button type="button" class="btn btn-secondary" onclick="clearInput()">Clear</button>
+        </form>
+
+        {% if recommendations is not none and not recommendations.empty %}
+        <h2 class="mt-4">Recommendations:</h2>
+        <div class="recommendations">
+            {% for index, row in recommendations.iterrows() %}
+            <div class="recommendation">
+                <strong>{{ row.recipe_name }}</strong><br>
+                <a href="{{ row.recipe_urls }}" class="btn btn-link" target="_blank">View Recipe</a>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-success mt-3" onclick="goBack()">Back</button> <!-- Back Button -->
+        {% elif recommendations is not none %}
+        <p class="text-center">No recommendations found. Please try different ingredients.</p>
+        {% endif %}
+    </div>
+    <script>
+        function clearInput() {
+            document.getElementById('ingredients').value = ''; // Clear the input field
+            document.querySelector('.recommendations').innerHTML = ''; // Clear recommendations
+        }
+
+        function goBack() {
+            clearInput(); // Clear the input and recommendations
+            document.getElementById('ingredients').focus(); // Focus back on the input
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
